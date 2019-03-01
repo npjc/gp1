@@ -1,12 +1,15 @@
 Package: gp1
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Read, Validate, Simulate and Write GP1 instrument files
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: person("Nicolas", "Coutin", , "nicolas.coutin@gmail.com", c("aut", "cre"), comment = c(ORCID = "0000-0001-9336-226X"))
+Maintainer: Nicolas Coutin <nicolas.coutin@gmail.com>
+Description: The GP1 high-throughput liquid growth instrument records 
+    measurement data to a text file for each run. This package parses and 
+    validates these files.
 License: What license is it under?
+URL: https://github.com/npjc/gp1
+BugReports: https://github.com/npjc/gp1/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
