@@ -13,21 +13,19 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 ```
-# gp1
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/gp1)](https://cran.r-project.org/package=readgp1)
 
-[![CRAN status](https://www.r-pkg.org/badges/version/gp1)](https://cran.r-project.org/package=gp1)
-
-The goal of gp1 is to read, validate and write data from the GP-1 instrument.
+Read, Validate, Simulate and Write GP1 instrument files
 
 ## Installation
 
 <!-- You can install the released version of gp1 from [CRAN](https://CRAN.R-project.org) with: -->
 
 ``` r
-# install.packages("gp1") # not yet
-remotes::install_github("npjc/gp1")
+# install.packages("readgp1") # not yet
+remotes::install_github("npjc/readgp1")
 ```
 
 ## Example

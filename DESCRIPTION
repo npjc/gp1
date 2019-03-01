@@ -1,4 +1,4 @@
-Package: gp1
+Package: readgp1
 Type: Package
 Title: Read, Validate, Simulate and Write GP1 instrument files
 Version: 0.1.0
@@ -8,8 +8,8 @@ Description: The GP1 high-throughput liquid growth instrument records
     measurement data to a text file for each run. This package parses and 
     validates these files.
 License: What license is it under?
-URL: https://github.com/npjc/gp1
-BugReports: https://github.com/npjc/gp1/issues
+URL: https://github.com/npjc/readgp1
+BugReports: https://github.com/npjc/readgp1/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
