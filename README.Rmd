@@ -1,0 +1,106 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+library(tidyverse)
+```
+# gp1
+
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+[![CRAN status](https://www.r-pkg.org/badges/version/gp1)](https://cran.r-project.org/package=gp1)
+
+The goal of gp1 is to read, validate and write data from the GP-1 instrument.
+
+## Installation
+
+<!-- You can install the released version of gp1 from [CRAN](https://CRAN.R-project.org) with: -->
+
+``` r
+# install.packages("gp1") # not yet
+remotes::install_github("npjc/gp1")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r libandpaths, echo=FALSE}
+library(gp1)
+
+path <- gp1_example("GP1-Results_jan27.txt")
+```
+
+Read the raw data into tidy tibble:
+
+```{r eg1}
+d <- read_gp1(path)
+d
+```
+
+Allowing for easy visualisation:
+
+```{r eg1plot, echo=FALSE}
+d %>%
+    group_by(plate, well) %>%
+    mutate(runtime = as.integer(datetime - min(datetime)) / 3600) %>%
+    ggplot(aes(x = runtime, y = value)) +
+    geom_line(aes(color = plate, group = interaction(plate, well))) +
+    geom_text(aes(x = 0, y = 3, label = well, group = well), alpha = 0.5,
+              hjust = 'left', vjust = 'top', data = distinct(d, well)) +
+    facet_wrap(~well, ncol = 8) +
+    labs(x = 'time (elapsed, hours)', y = 'OD600 (raw, GP-1)',
+         caption = paste0('source: ', basename(path))) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(size = 0.1),
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          panel.background = element_rect(fill = NULL, color = 'black'),
+          plot.caption = element_text(family = 'mono', face = 'bold'))
+
+```
+
+Another example
+
+```{r eg2raw}
+path2 <- gp1_example("GP1-Results_feb11.txt")
+cat(readr::read_lines(path2, n_max = 5), sep = '\n')
+```
+
+
+```{r eg2tidy}
+d2 <- read_gp1(path2)
+d2
+```
+
+
+```{r eg2plot, echo = FALSE}
+d2 %>%
+    group_by(plate, well) %>%
+    mutate(runtime = as.integer(datetime - min(datetime)) / 3600) %>%
+    ggplot(aes(x = runtime, y = value)) +
+    geom_line(aes(color = plate, group = interaction(plate, well))) +
+    geom_text(aes(x = 0, y = 3, label = well, group = well), alpha = 0.5,
+              hjust = 'left', vjust = 'top', data = distinct(d, well)) +
+    facet_wrap(~well, ncol = 8) +
+    labs(x = 'time (elapsed, hours)', y = 'OD600 (raw, GP-1)',
+         caption = paste0('source: ', basename(path))) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(size = 0.1),
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          panel.background = element_rect(fill = NULL, color = 'black'),
+          plot.caption = element_text(family = 'mono', face = 'bold'))
+
+```
