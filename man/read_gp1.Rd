@@ -4,13 +4,34 @@
 \alias{read_gp1}
 \title{read GP-1 output file into tidy tibble}
 \usage{
-read_gp1(path, well_labels = gp1::mtp_wells(6, 8))
+read_gp1(file, all_fields = FALSE)
 }
 \arguments{
-\item{path}{<chr> path to results file}
+\item{file}{\code{<chr>} path to results file}
 
-\item{well_labels}{<chr> vector of well labels, defaults to row major 48MTP ('A01', 'A02',...)}
+\item{all_fields}{\code{<lgl>} should all fields be included? Defaults to \link{FALSE}.}
+}
+\value{
+\code{\link[=tibble]{tibble()}} with the following cols:
+\itemize{
+\item \strong{plate} identifier as found in file,
+\item \strong{well} identifier,
+\item \strong{runtime} time since run start in seconds,
+\item \strong{measure} numeric value of measurement as recorded,
+}
+
+if \code{all_fields = TRUE}:
+\itemize{
+\item \strong{datetime} of measurement in ISO8601 (datetime format),
+\item \strong{measure_type} the type of measurement; currently this is a stub to
+allow for multi-measurement-type results parsing in the future if needed.
+}
 }
 \description{
 read GP-1 output file into tidy tibble
+}
+\examples{
+file <- gp1_example('GP1-Results_feb11.txt')
+read_gp1(file)
+read_gp1(file, all_fields = TRUE)
 }

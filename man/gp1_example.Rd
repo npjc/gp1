@@ -7,8 +7,13 @@
 gp1_example(file)
 }
 \arguments{
-\item{file}{<chr> name of the file}
+\item{file}{\code{<chr>} name of the file}
 }
 \description{
 get a gp1 example data file
+}
+\examples{
+    gp1_example('GP1-Results_feb11.txt')
+    gp1_example('GP1-Results_jan27.txt')
+    gp1_example('HIPHOP-Feb27Results.txt')
 }

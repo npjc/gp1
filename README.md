@@ -5,7 +5,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/gp1)](https://cran.r-project.org/package=readgp1)
 
-Read, Validate, Simulate and Write GP1 instrument
+Read, ~~Validate~~, ~~Simulate~~ and ~~Write~~ GP1 instrument
 files
 
 ## Installation
@@ -19,62 +19,84 @@ remotes::install_github("npjc/readgp1")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
 Read the raw data into tidy tibble:
 
 ``` r
-d <- read_gp1(path)
-d
+library(readgp1)
+path <- gp1_example("GP1-Results_jan27.txt")
+read_gp1(path)
 #> # A tibble: 21,168 x 4
-#>    plate datetime            well  value
-#>    <chr> <dttm>              <chr> <dbl>
-#>  1 0     2019-01-24 12:13:31 A01   0.141
-#>  2 0     2019-01-24 12:26:18 A01   0.141
-#>  3 0     2019-01-24 12:39:26 A01   0.142
-#>  4 0     2019-01-24 12:52:34 A01   0.148
-#>  5 0     2019-01-24 13:05:42 A01   0.146
-#>  6 0     2019-01-24 13:18:50 A01   0.145
-#>  7 0     2019-01-24 13:31:58 A01   0.147
-#>  8 0     2019-01-24 13:45:06 A01   0.149
-#>  9 0     2019-01-24 13:58:14 A01   0.151
-#> 10 0     2019-01-24 14:11:22 A01   0.152
+#>    plate well  runtime measure
+#>    <int> <chr>   <int>   <dbl>
+#>  1     0 A1          0   0.141
+#>  2     0 A1        767   0.141
+#>  3     0 A1       1555   0.142
+#>  4     0 A1       2343   0.148
+#>  5     0 A1       3131   0.146
+#>  6     0 A1       3919   0.145
+#>  7     0 A1       4707   0.147
+#>  8     0 A1       5495   0.149
+#>  9     0 A1       6283   0.151
+#> 10     0 A1       7071   0.152
+#> # … with 21,158 more rows
+read_gp1(path, all_fields = TRUE)
+#> # A tibble: 21,168 x 6
+#>    plate well  datetime            runtime measure_type measure
+#>    <int> <chr> <dttm>                <int> <chr>          <dbl>
+#>  1     0 A1    2019-01-24 12:13:31       0 Epoch (GP-1)   0.141
+#>  2     0 A1    2019-01-24 12:26:18     767 Epoch (GP-1)   0.141
+#>  3     0 A1    2019-01-24 12:39:26    1555 Epoch (GP-1)   0.142
+#>  4     0 A1    2019-01-24 12:52:34    2343 Epoch (GP-1)   0.148
+#>  5     0 A1    2019-01-24 13:05:42    3131 Epoch (GP-1)   0.146
+#>  6     0 A1    2019-01-24 13:18:50    3919 Epoch (GP-1)   0.145
+#>  7     0 A1    2019-01-24 13:31:58    4707 Epoch (GP-1)   0.147
+#>  8     0 A1    2019-01-24 13:45:06    5495 Epoch (GP-1)   0.149
+#>  9     0 A1    2019-01-24 13:58:14    6283 Epoch (GP-1)   0.151
+#> 10     0 A1    2019-01-24 14:11:22    7071 Epoch (GP-1)   0.152
 #> # … with 21,158 more rows
 ```
 
-Allowing for easy visualisation:
+-----
+
+To visualize the parsed output with the `mtpview` pkg:
+
+``` r
+library(mtpview)
+d <- read_gp1(path)
+
+mtp_ggplot(d, aes(plate = plate, well = well)) + 
+  mtp_spec_48well() + 
+  geom_footprint() + 
+  geom_notched_border() + 
+  geom_row_label() + 
+  geom_col_label()  +
+  geom_well_rect(fill = 'white') + 
+  geom_well_line(aes(x = runtime, y = measure)) + 
+  facet_wrap(~plate, ncol = 1)
+```
 
 <img src="man/figures/README-eg1plot-1.png" width="100%" />
 
-Another example
+Or with vanilla `ggplot2`
 
 ``` r
-path2 <- gp1_example("GP1-Results_feb11.txt")
-cat(readr::read_lines(path2, n_max = 5), sep = '\n')
-#> Plate[1], 2019/2/11, 13:55:52, 9.7e-002, 7.9e-002, 8.5e-002, 8.e-002, 0.743, 8.6e-002, 8.5e-002, 9.6e-002, 9.9e-002, 7.5e-002, 7.4e-002, 8.4e-002, 0.105, 7.6e-002, 8.6e-002, 9.6e-002, 9.6e-002, 7.6e-002, 8.2e-002, 7.4e-002, 9.9e-002, 7.4e-002, 7.6e-002, 8.5e-002, 9.5e-002, 7.9e-002, 7.9e-002, 8.e-002, 0.125, 8.8e-002, 8.7e-002, 1.095, 9.6e-002, 8.e-002, 7.9e-002, 8.3e-002, 0.117, 0.118, 8.8e-002, 0.112, 0.127, 8.2e-002, 8.e-002, 8.3e-002, 0.112, 8.4e-002, 0.146, 0.446
-#> Plate[1], 2019/2/11, 14:02:16, 9.9e-002, 7.9e-002, 8.6e-002, 8.2e-002, 0.419, 9.2e-002, 8.6e-002, 9.6e-002, 0.103, 7.7e-002, 7.6e-002, 8.6e-002, 0.11, 7.8e-002, 8.8e-002, 9.6e-002, 9.8e-002, 7.8e-002, 8.3e-002, 7.5e-002, 0.101, 7.6e-002, 7.8e-002, 8.5e-002, 0.103, 8.1e-002, 8.e-002, 8.1e-002, 0.134, 9.6e-002, 9.4e-002, 0.813, 9.8e-002, 8.1e-002, 8.1e-002, 8.7e-002, 0.121, 8.9e-002, 9.8e-002, 9.5e-002, 0.128, 8.2e-002, 8.e-002, 8.4e-002, 0.114, 8.5e-002, 9.7e-002, 0.174
-#> Plate[1], 2019/2/11, 14:08:42, 9.8e-002, 7.9e-002, 8.5e-002, 8.3e-002, 0.141, 9.2e-002, 8.6e-002, 9.6e-002, 0.101, 7.5e-002, 7.5e-002, 8.5e-002, 0.109, 7.8e-002, 8.8e-002, 9.6e-002, 9.7e-002, 7.7e-002, 8.2e-002, 7.5e-002, 0.103, 7.5e-002, 7.7e-002, 8.5e-002, 0.104, 8.1e-002, 8.1e-002, 8.1e-002, 0.136, 9.4e-002, 9.e-002, 0.141, 9.6e-002, 8.1e-002, 8.e-002, 8.4e-002, 0.12, 8.9e-002, 9.2e-002, 9.5e-002, 0.126, 8.2e-002, 8.e-002, 8.3e-002, 0.113, 8.5e-002, 9.2e-002, 9.8e-002
-#> Plate[1], 2019/2/11, 14:15:22, 9.8e-002, 7.9e-002, 8.5e-002, 8.4e-002, 0.112, 9.1e-002, 8.6e-002, 9.6e-002, 0.102, 7.5e-002, 7.5e-002, 8.5e-002, 0.108, 7.8e-002, 8.9e-002, 9.6e-002, 9.7e-002, 7.7e-002, 8.2e-002, 7.5e-002, 0.104, 7.5e-002, 7.8e-002, 8.5e-002, 0.104, 8.1e-002, 8.e-002, 8.2e-002, 0.136, 8.9e-002, 9.e-002, 9.2e-002, 9.8e-002, 8.1e-002, 8.e-002, 8.4e-002, 0.12, 8.7e-002, 9.1e-002, 9.5e-002, 0.126, 8.2e-002, 8.e-002, 8.3e-002, 0.112, 8.4e-002, 9.1e-002, 9.5e-002
-#> Plate[1], 2019/2/11, 14:22:02, 9.8e-002, 7.9e-002, 8.5e-002, 8.4e-002, 0.114, 9.e-002, 8.6e-002, 9.6e-002, 0.102, 7.5e-002, 7.5e-002, 8.5e-002, 0.108, 7.8e-002, 8.9e-002, 9.6e-002, 9.7e-002, 7.7e-002, 8.2e-002, 7.5e-002, 0.105, 7.5e-002, 7.8e-002, 8.5e-002, 0.104, 8.1e-002, 8.e-002, 8.2e-002, 0.135, 8.9e-002, 9.e-002, 9.1e-002, 9.7e-002, 8.1e-002, 8.e-002, 8.4e-002, 0.12, 8.7e-002, 9.1e-002, 9.5e-002, 0.125, 8.2e-002, 8.e-002, 8.3e-002, 0.113, 8.4e-002, 9.1e-002, 9.6e-002
-```
-
-``` r
-d2 <- read_gp1(path2)
-d2
-#> # A tibble: 14,544 x 4
-#>    plate datetime            well  value
-#>    <chr> <dttm>              <chr> <dbl>
-#>  1 1     2019-02-11 13:55:52 A01   0.097
-#>  2 1     2019-02-11 14:02:16 A01   0.099
-#>  3 1     2019-02-11 14:08:42 A01   0.098
-#>  4 1     2019-02-11 14:15:22 A01   0.098
-#>  5 1     2019-02-11 14:22:02 A01   0.098
-#>  6 1     2019-02-11 14:28:42 A01   0.099
-#>  7 1     2019-02-11 14:35:22 A01   0.098
-#>  8 1     2019-02-11 14:42:02 A01   0.097
-#>  9 1     2019-02-11 14:48:42 A01   0.097
-#> 10 1     2019-02-11 14:55:22 A01   0.099
-#> # … with 14,534 more rows
+library(tidyverse)
+d %>%
+    group_by(plate, well) %>%
+    ggplot(aes(x = runtime, y = measure)) +
+    geom_line(aes(color = plate, group = interaction(plate, well))) +
+    geom_text(aes(x = 0, y = 3, label = well, group = well), alpha = 0.5,
+              hjust = 'left', vjust = 'top', data = distinct(d, well)) +
+    facet_wrap(~well, ncol = 8) +
+    labs(x = 'time (elapsed, hours)', y = 'OD600 (raw, GP-1)',
+         caption = paste0('source: ', basename(path))) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          panel.grid.major = element_line(size = 0.1),
+          strip.background = element_blank(),
+          strip.text = element_blank(),
+          panel.background = element_rect(fill = NULL, color = 'black'),
+          plot.caption = element_text(family = 'mono', face = 'bold'))
 ```
 
 <img src="man/figures/README-eg2plot-1.png" width="100%" />

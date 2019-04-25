@@ -7,7 +7,7 @@ Maintainer: Nicolas Coutin <nicolas.coutin@gmail.com>
 Description: The GP1 high-throughput liquid growth instrument records 
     measurement data to a text file for each run. This package parses and 
     validates these files.
-License: What license is it under?
+License: GPL-3
 URL: https://github.com/npjc/readgp1
 BugReports: https://github.com/npjc/readgp1/issues
 Encoding: UTF-8
@@ -15,6 +15,7 @@ LazyData: true
 Imports: 
     dplyr,
     readr,
-    tidyr
+    tidyr,
+    rlang
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
