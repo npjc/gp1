@@ -52,7 +52,7 @@ read_gp1 <- function(file, all_fields = FALSE) {
     d <- readr::read_csv(file, col_names = col_names, col_types = col_types)
     d <- tidyr::extract(d, .data$plate, "plate", regex = "Plate\\[(\\d)\\]", convert = F)
     d <- dplyr::mutate(d,
-                       plate = as.integer(.data$plate),
+                       plate = .data$plate,
                        datetime = parse_gp1_datetime(.data$date, .data$time)
                        )
     d <- dplyr::select(d, -.data$date, -.data$time)
