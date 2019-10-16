@@ -31,7 +31,7 @@ allow for multi-measurement-type results parsing in the future if needed.
 read GP-1 output file into tidy tibble
 }
 \examples{
-file <- gp1_example('GP1-Results_feb11.txt')
+file <- gp1_example('gp1-example1.txt')
 read_gp1(file)
 read_gp1(file, all_fields = TRUE)
 }

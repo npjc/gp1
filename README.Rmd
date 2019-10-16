@@ -13,9 +13,11 @@ knitr::opts_chunk$set(
 )
 library(tidyverse)
 ```
-
-[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: start -->
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![CRAN status](https://www.r-pkg.org/badges/version/gp1)](https://cran.r-project.org/package=readgp1)
+<!-- badges: end -->
+
 
 Read, ~~Validate~~, ~~Simulate~~ and ~~Write~~ GP1 instrument files
 
@@ -34,7 +36,7 @@ Read the raw data into tidy tibble:
 
 ```{r eg1}
 library(readgp1)
-path <- gp1_example("GP1-Results_jan27.txt")
+path <- gp1_example("gp1-example1.txt")
 read_gp1(path)
 read_gp1(path, all_fields = TRUE)
 ```
@@ -44,7 +46,8 @@ read_gp1(path, all_fields = TRUE)
 To visualize the parsed output with the `mtpview` pkg:
 
 ```{r eg1plot, echo=TRUE}
-library(mtpview)
+library(mtpview1)
+library(ggplot2)
 d <- read_gp1(path)
 
 mtp_ggplot(d, aes(plate = plate, well = well)) + 
